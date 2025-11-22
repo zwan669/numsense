@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { AppMode } from '../types';
-import { BookOpen, Zap, Calculator, RotateCw } from 'lucide-react';
+import { BookOpen, Zap, Calculator, RotateCw, BarChart3 } from 'lucide-react';
 
 interface NavbarProps {
   currentMode: AppMode;
@@ -13,6 +14,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentMode, setMode }) => {
     { mode: AppMode.FLASHCARD, label: '翻转卡', icon: RotateCw },
     { mode: AppMode.BASIC_QUIZ, label: '基础测验', icon: Zap },
     { mode: AppMode.COMPLEX_QUIZ, label: '复杂测验', icon: Calculator },
+    { mode: AppMode.ANALYTICS, label: '错题分析', icon: BarChart3 },
   ];
 
   return (

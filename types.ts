@@ -1,3 +1,4 @@
+
 export interface FractionData {
   n: number; // The denominator (e.g., 2 for 1/2)
   fractionStr: string; // "1/2"
@@ -11,7 +12,17 @@ export enum AppMode {
   BASIC_QUIZ = 'BASIC_QUIZ',
   COMPLEX_QUIZ = 'COMPLEX_QUIZ',
   FLASHCARD = 'FLASHCARD',
+  ANALYTICS = 'ANALYTICS',
 }
+
+export interface ItemStats {
+  attempts: number;
+  incorrect: number;
+  totalTimeMs: number;
+  lastSeen: number;
+}
+
+export type UserStats = Record<string, ItemStats>;
 
 export interface BasicQuestion {
   id: string;
