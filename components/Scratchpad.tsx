@@ -117,19 +117,21 @@ const Scratchpad: React.FC<ScratchpadProps> = ({ className = '' }) => {
     
     const pos = getPos(e);
     
-    // Check if cursor is within bounds
+    // Check if cursor is within bounds (roughly)
     if (pos.x < 0 || pos.y < 0 || 
         pos.x > containerRef.current.clientWidth || 
         pos.y > containerRef.current.clientHeight) {
-        setIsHovering(false);
+        if (isHovering) setIsHovering(false);
         return;
     }
 
     if (!isHovering) setIsHovering(true);
 
-    cursorRef.current.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-    cursorRef.current.style.width = `${Math.max(lineWidth, 4)}px`;
-    cursorRef.current.style.height = `${Math.max(lineWidth, 4)}px`;
+    // Using translate3d for GPU acceleration
+    // translate(-50%, -50%) centers the cursor div on the mouse coordinates
+    cursorRef.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`;
+    cursorRef.current.style.width = `${Math.max(lineWidth, 6)}px`;
+    cursorRef.current.style.height = `${Math.max(lineWidth, 6)}px`;
   };
 
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
@@ -206,7 +208,10 @@ const Scratchpad: React.FC<ScratchpadProps> = ({ className = '' }) => {
 
   // Resize Handle Logic
   const handleResizeStart = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
+    // Only prevent default for mouse, to avoid text selection. 
+    // For touch, we might want to be careful, but generally okay here.
+    if (!('touches' in e)) e.preventDefault();
+    
     isResizingRef.current = true;
     
     const startY = 'touches' in e ? e.touches[0].clientY : e.clientY;
@@ -325,16 +330,18 @@ const Scratchpad: React.FC<ScratchpadProps> = ({ className = '' }) => {
                 style={{ cursor: 'none' }} // Ensure system cursor is hidden
             />
 
-            {/* Custom Cursor */}
+            {/* Custom Cursor - Using absolute positioning within the relative container */}
             <div 
                 ref={cursorRef}
-                className="fixed pointer-events-none rounded-full border-2 border-slate-500 bg-white/30 z-50 mix-blend-difference"
+                className="absolute pointer-events-none rounded-full border border-slate-800 z-50"
                 style={{ 
                     display: isHovering ? 'block' : 'none',
                     top: 0,
                     left: 0,
-                    transform: 'translate(-50%, -50%)', // Center it initially, though updated by JS
-                    willChange: 'transform, width, height'
+                    // Use a white shadow ring for high contrast on dark backgrounds
+                    boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.9)', 
+                    backgroundColor: tool === 'eraser' ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+                    willChange: 'transform, width, height',
                 }}
             />
         </div>
