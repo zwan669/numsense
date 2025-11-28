@@ -3,6 +3,7 @@ import { ComplexQuestion } from '../types';
 import { generateComplexQuestion } from '../services/mathUtils';
 import { AlertCircle, Calculator, ChevronRight, Check } from 'lucide-react';
 import { Fraction } from './Fraction';
+import Scratchpad from './Scratchpad';
 
 const ComplexQuiz: React.FC = () => {
   const [question, setQuestion] = useState<ComplexQuestion | null>(null);
@@ -148,7 +149,7 @@ const ComplexQuiz: React.FC = () => {
 
       {/* Explanation Card (Conditional) */}
       {(quizState === 'WRONG' || quizState === 'REVEALED') && (
-        <div className="bg-slate-800 text-slate-50 rounded-xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-4">
+        <div className="bg-slate-800 text-slate-50 rounded-xl p-6 shadow-xl animate-in fade-in slide-in-from-bottom-4 mb-8">
           <h3 className="text-lg font-bold mb-4 flex items-center text-amber-400">
             解析过程
           </h3>
@@ -163,6 +164,9 @@ const ComplexQuiz: React.FC = () => {
            </button>
         </div>
       )}
+
+      {/* Scratchpad */}
+      <Scratchpad className="mt-8" />
     </div>
   );
 };
